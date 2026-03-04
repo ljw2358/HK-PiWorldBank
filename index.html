@@ -8,155 +8,167 @@
 <style>
 body{
 margin:0;
-font-family:Arial, Helvetica, sans-serif;
-background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(135deg,#141e30,#243b55);
 color:white;
 }
 
 header{
-padding:20px;
-text-align:center;
-background:#111;
-font-size:24px;
-font-weight:bold;
-}
-
-nav{
 display:flex;
-flex-wrap:wrap;
-justify-content:center;
-background:#1c1c1c;
+justify-content:space-between;
+align-items:center;
+padding:20px 40px;
+background:rgba(0,0,0,0.4);
+backdrop-filter:blur(10px);
 }
 
-nav button{
-margin:5px;
-padding:8px 12px;
-border:none;
+.logo{
+font-size:26px;
+font-weight:bold;
+letter-spacing:1px;
+}
+
+.lang-select{
+padding:6px 10px;
 border-radius:20px;
-cursor:pointer;
-background:#333;
-color:white;
-font-size:12px;
+border:none;
 }
 
-nav button:hover{
+.container{
+padding:40px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(6,1fr);
+gap:20px;
+margin-top:30px;
+}
+
+.card{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(12px);
+border-radius:20px;
+padding:30px 10px;
+text-align:center;
+cursor:pointer;
+transition:0.3s;
+font-size:16px;
+font-weight:600;
+}
+
+.card:hover{
 background:#00c6ff;
 color:black;
+transform:translateY(-5px);
 }
 
 .section{
 display:none;
-padding:20px;
+margin-top:40px;
+background:rgba(255,255,255,0.08);
+padding:30px;
+border-radius:20px;
 }
 
 .active{
 display:block;
 }
 
-.card{
-background:rgba(255,255,255,0.08);
-padding:20px;
-margin:15px 0;
-border-radius:15px;
-}
-
-input,select{
+input{
 width:100%;
-padding:10px;
-margin:5px 0;
-border-radius:10px;
+padding:12px;
+margin:10px 0;
+border-radius:12px;
 border:none;
 }
 
-.action-btn{
-padding:10px;
+button.action{
+width:100%;
+padding:12px;
+border-radius:12px;
+border:none;
 background:#00c6ff;
-border:none;
-border-radius:10px;
 cursor:pointer;
-width:100%;
-margin-top:10px;
+font-weight:bold;
 }
 
-.lang-select{
-position:absolute;
-top:20px;
-right:20px;
+@media(max-width:1000px){
+.grid{
+grid-template-columns:repeat(3,1fr);
+}
+}
+
+@media(max-width:600px){
+.grid{
+grid-template-columns:repeat(2,1fr);
+}
 }
 
 footer{
 text-align:center;
+margin-top:50px;
 padding:20px;
 opacity:0.7;
-font-size:14px;
 }
 </style>
 
 <script>
-const translations={
-en:{dashboard:"Dashboard",payment:"Payment",transfer:"Transfer",vault:"Vault",reward:"Reward",liquidity:"Liquidity Pool",media:"Media",support:"Support",balance:"Total Balance",contact:"Contact"},
-ko:{dashboard:"대시보드",payment:"결제",transfer:"송금",vault:"예치",reward:"리워드",liquidity:"유동성풀",media:"미디어",support:"고객센터",balance:"총 잔액",contact:"문의"},
-zh:{dashboard:"仪表盘",payment:"支付",transfer:"转账",vault:"存款",reward:"奖励",liquidity:"流动池",media:"媒体",support:"客服",balance:"总余额",contact:"联系"},
-ja:{dashboard:"ダッシュボード",payment:"支払い",transfer:"送金",vault:"預金",reward:"報酬",liquidity:"流動性プール",media:"メディア",support:"サポート",balance:"総残高",contact:"連絡"},
-ar:{dashboard:"لوحة التحكم",payment:"دفع",transfer:"تحويل",vault:"إيداع",reward:"مكافأة",liquidity:"مجمع السيولة",media:"إعلام",support:"الدعم",balance:"الرصيد الإجمالي",contact:"اتصال"},
-es:{dashboard:"Panel",payment:"Pago",transfer:"Transferencia",vault:"Depósito",reward:"Recompensa",liquidity:"Liquidez",media:"Medios",support:"Soporte",balance:"Saldo Total",contact:"Contacto"},
-fr:{dashboard:"Tableau",payment:"Paiement",transfer:"Transfert",vault:"Dépôt",reward:"Récompense",liquidity:"Liquidité",media:"Média",support:"Support",balance:"Solde Total",contact:"Contact"},
-de:{dashboard:"Dashboard",payment:"Zahlung",transfer:"Überweisung",vault:"Einlage",reward:"Belohnung",liquidity:"Liquidität",media:"Medien",support:"Support",balance:"Gesamtguthaben",contact:"Kontakt"},
-ru:{dashboard:"Панель",payment:"Платеж",transfer:"Перевод",vault:"Вклад",reward:"Награда",liquidity:"Ликвидность",media:"Медиа",support:"Поддержка",balance:"Общий баланс",contact:"Контакт"},
-pt:{dashboard:"Painel",payment:"Pagamento",transfer:"Transferência",vault:"Depósito",reward:"Recompensa",liquidity:"Liquidez",media:"Mídia",support:"Suporte",balance:"Saldo Total",contact:"Contato"},
-it:{dashboard:"Pannello",payment:"Pagamento",transfer:"Trasferimento",vault:"Deposito",reward:"Ricompensa",liquidity:"Liquidità",media:"Media",support:"Supporto",balance:"Saldo Totale",contact:"Contatto"},
-hi:{dashboard:"डैशबोर्ड",payment:"भुगतान",transfer:"ट्रांसफर",vault:"जमा",reward:"इनाम",liquidity:"लिक्विडिटी",media:"मीडिया",support:"सहायता",balance:"कुल बैलेंस",contact:"संपर्क"},
-tr:{dashboard:"Panel",payment:"Ödeme",transfer:"Transfer",vault:"Mevduat",reward:"Ödül",liquidity:"Likidite",media:"Medya",support:"Destek",balance:"Toplam Bakiye",contact:"İletişim"},
-vi:{dashboard:"Bảng điều khiển",payment:"Thanh toán",transfer:"Chuyển tiền",vault:"Gửi tiền",reward:"Thưởng",liquidity:"Thanh khoản",media:"Truyền thông",support:"Hỗ trợ",balance:"Tổng số dư",contact:"Liên hệ"},
-th:{dashboard:"แดชบอร์ด",payment:"ชำระเงิน",transfer:"โอนเงิน",vault:"ฝากเงิน",reward:"รางวัล",liquidity:"สภาพคล่อง",media:"สื่อ",support:"ฝ่ายช่วยเหลือ",balance:"ยอดรวม",contact:"ติดต่อ"},
-id:{dashboard:"Dasbor",payment:"Pembayaran",transfer:"Transfer",vault:"Deposito",reward:"Hadiah",liquidity:"Likuiditas",media:"Media",support:"Dukungan",balance:"Saldo Total",contact:"Kontak"},
-nl:{dashboard:"Dashboard",payment:"Betaling",transfer:"Overboeking",vault:"Storting",reward:"Beloning",liquidity:"Liquiditeit",media:"Media",support:"Ondersteuning",balance:"Totaal Saldo",contact:"Contact"},
-pl:{dashboard:"Panel",payment:"Płatność",transfer:"Transfer",vault:"Depozyt",reward:"Nagroda",liquidity:"Płynność",media:"Media",support:"Wsparcie",balance:"Saldo Całkowite",contact:"Kontakt"},
-sv:{dashboard:"Instrumentpanel",payment:"Betalning",transfer:"Överföring",vault:"Insättning",reward:"Belöning",liquidity:"Likviditet",media:"Media",support:"Support",balance:"Totalt Saldo",contact:"Kontakt"},
-he:{dashboard:"לוח בקרה",payment:"תשלום",transfer:"העברה",vault:"הפקדה",reward:"תגמול",liquidity:"נזילות",media:"מדיה",support:"תמיכה",balance:"יתרה כוללת",contact:"צור קשר"}
+const t={
+en:{pay:"Payment",send:"Transfer",vault:"Vault",reward:"Reward",ubi:"UBI",support:"Support"},
+ko:{pay:"결제",send:"송금",vault:"예치",reward:"리워드",ubi:"UBI",support:"고객센터"},
+zh:{pay:"支付",send:"转账",vault:"存款",reward:"奖励",ubi:"全民收入",support:"客服"},
+ja:{pay:"支払い",send:"送金",vault:"預金",reward:"報酬",ubi:"UBI",support:"サポート"},
+es:{pay:"Pago",send:"Transferencia",vault:"Depósito",reward:"Recompensa",ubi:"UBI",support:"Soporte"},
+fr:{pay:"Paiement",send:"Transfert",vault:"Dépôt",reward:"Récompense",ubi:"UBI",support:"Support"},
+de:{pay:"Zahlung",send:"Überweisung",vault:"Einlage",reward:"Belohnung",ubi:"UBI",support:"Support"},
+ru:{pay:"Платеж",send:"Перевод",vault:"Вклад",reward:"Награда",ubi:"UBI",support:"Поддержка"},
+pt:{pay:"Pagamento",send:"Transferência",vault:"Depósito",reward:"Recompensa",ubi:"UBI",support:"Suporte"},
+it:{pay:"Pagamento",send:"Trasferimento",vault:"Deposito",reward:"Ricompensa",ubi:"UBI",support:"Supporto"},
+hi:{pay:"भुगतान",send:"ट्रांसफर",vault:"जमा",reward:"इनाम",ubi:"UBI",support:"सहायता"},
+tr:{pay:"Ödeme",send:"Transfer",vault:"Mevduat",reward:"Ödül",ubi:"UBI",support:"Destek"},
+vi:{pay:"Thanh toán",send:"Chuyển tiền",vault:"Gửi tiền",reward:"Thưởng",ubi:"UBI",support:"Hỗ trợ"},
+th:{pay:"ชำระเงิน",send:"โอนเงิน",vault:"ฝากเงิน",reward:"รางวัล",ubi:"UBI",support:"ฝ่ายช่วยเหลือ"},
+id:{pay:"Pembayaran",send:"Transfer",vault:"Deposito",reward:"Hadiah",ubi:"UBI",support:"Dukungan"},
+nl:{pay:"Betaling",send:"Overboeking",vault:"Storting",reward:"Beloning",ubi:"UBI",support:"Ondersteuning"},
+pl:{pay:"Płatność",send:"Transfer",vault:"Depozyt",reward:"Nagroda",ubi:"UBI",support:"Wsparcie"},
+sv:{pay:"Betalning",send:"Överföring",vault:"Insättning",reward:"Belöning",ubi:"UBI",support:"Support"},
+he:{pay:"תשלום",send:"העברה",vault:"הפקדה",reward:"תגמול",ubi:"UBI",support:"תמיכה"},
+ar:{pay:"دفع",send:"تحويل",vault:"إيداع",reward:"مكافأة",ubi:"UBI",support:"الدعم"}
 };
 
-function setLanguage(lang){
-if(!translations[lang]) lang="en";
-document.getElementById("nav-dashboard").innerText=translations[lang].dashboard;
-document.getElementById("nav-payment").innerText=translations[lang].payment;
-document.getElementById("nav-transfer").innerText=translations[lang].transfer;
-document.getElementById("nav-vault").innerText=translations[lang].vault;
-document.getElementById("nav-reward").innerText=translations[lang].reward;
-document.getElementById("nav-liquidity").innerText=translations[lang].liquidity;
-document.getElementById("nav-media").innerText=translations[lang].media;
-document.getElementById("nav-support").innerText=translations[lang].support;
-document.getElementById("balance-title").innerText=translations[lang].balance;
-document.getElementById("contact-title").innerText=translations[lang].contact;
+function setLang(l){
+if(!t[l]) l="en";
+document.getElementById("pay").innerText=t[l].pay;
+document.getElementById("send").innerText=t[l].send;
+document.getElementById("vault").innerText=t[l].vault;
+document.getElementById("reward").innerText=t[l].reward;
+document.getElementById("ubi").innerText=t[l].ubi;
+document.getElementById("support").innerText=t[l].support;
 }
 
-function autoDetect(){
-let lang=navigator.language.slice(0,2);
-setLanguage(lang);
+window.onload=function(){
+let l=navigator.language.slice(0,2);
+setLang(l);
 }
 
-function showSection(id){
-let sections=document.getElementsByClassName("section");
-for(let i=0;i<sections.length;i++){
-sections[i].classList.remove("active");
-}
+function openSection(id){
+let s=document.getElementsByClassName("section");
+for(let i=0;i<s.length;i++) s[i].classList.remove("active");
 document.getElementById(id).classList.add("active");
 }
-
-window.onload=autoDetect;
 </script>
 
 </head>
 <body>
 
 <header>
-🌍 PiWorldBank
-<select class="lang-select" onchange="setLanguage(this.value)">
+<div class="logo">🌍 PiWorldBank</div>
+<select class="lang-select" onchange="setLang(this.value)">
 <option value="en">EN</option>
 <option value="ko">KO</option>
 <option value="zh">ZH</option>
 <option value="ja">JA</option>
-<option value="ar">AR</option>
 <option value="es">ES</option>
 <option value="fr">FR</option>
 <option value="de">DE</option>
@@ -172,81 +184,57 @@ window.onload=autoDetect;
 <option value="pl">PL</option>
 <option value="sv">SV</option>
 <option value="he">HE</option>
+<option value="ar">AR</option>
 </select>
 </header>
 
-<nav>
-<button id="nav-dashboard" onclick="showSection('dashboard')">Dashboard</button>
-<button id="nav-payment" onclick="showSection('payment')">Payment</button>
-<button id="nav-transfer" onclick="showSection('transfer')">Transfer</button>
-<button id="nav-vault" onclick="showSection('vault')">Vault</button>
-<button id="nav-reward" onclick="showSection('reward')">Reward</button>
-<button id="nav-liquidity" onclick="showSection('liquidity')">Liquidity</button>
-<button id="nav-media" onclick="showSection('media')">Media</button>
-<button id="nav-support" onclick="showSection('support')">Support</button>
-</nav>
+<div class="container">
 
-<div id="dashboard" class="section active">
-<div class="card">
-<h2 id="balance-title">Total Balance</h2>
-<h1>400 Pi</h1>
-</div>
+<div class="grid">
+<div class="card" id="pay" onclick="openSection('payment')">Payment</div>
+<div class="card" id="send" onclick="openSection('transfer')">Transfer</div>
+<div class="card" id="vault" onclick="openSection('vaultSec')">Vault</div>
+<div class="card" id="reward" onclick="openSection('rewardSec')">Reward</div>
+<div class="card" id="ubi" onclick="openSection('ubiSec')">UBI</div>
+<div class="card" id="support" onclick="openSection('supportSec')">Support</div>
 </div>
 
 <div id="payment" class="section">
-<div class="card">
-<input type="number" placeholder="Amount (Pi)">
-<button class="action-btn">Pay</button>
-</div>
+<h2>Payment</h2>
+<input placeholder="Amount (Pi)">
+<button class="action">Execute Payment</button>
 </div>
 
 <div id="transfer" class="section">
-<div class="card">
-<input type="text" placeholder="Receiver">
-<input type="number" placeholder="Amount (Pi)">
-<button class="action-btn">Send</button>
-</div>
-</div>
-
-<div id="vault" class="section">
-<div class="card">
-<select>
-<option>30 Days</option>
-<option>90 Days</option>
-<option>180 Days</option>
-</select>
-<input type="number" placeholder="Amount (Pi)">
-<button class="action-btn">Deposit</button>
-</div>
+<h2>Transfer</h2>
+<input placeholder="Receiver">
+<input placeholder="Amount (Pi)">
+<button class="action">Send</button>
 </div>
 
-<div id="reward" class="section">
-<div class="card">
-<button class="action-btn">Check-in Reward</button>
-</div>
-</div>
-
-<div id="liquidity" class="section">
-<div class="card">
-<input type="number" placeholder="Amount (Pi)">
-<button class="action-btn">Join Pool</button>
-</div>
+<div id="vaultSec" class="section">
+<h2>Vault</h2>
+<input placeholder="Deposit Amount (Pi)">
+<button class="action">Start Deposit</button>
 </div>
 
-<div id="media" class="section">
-<div class="card">
-<a href="https://youtube.com" target="_blank">YouTube</a><br><br>
-<a href="https://tiktok.com" target="_blank">TikTok</a>
-</div>
+<div id="rewardSec" class="section">
+<h2>Reward</h2>
+<button class="action">Daily Check-in</button>
 </div>
 
-<div id="support" class="section">
-<div class="card">
-<h3 id="contact-title">Contact</h3>
-<input type="text" placeholder="Email">
-<input type="text" placeholder="Message">
-<button class="action-btn">Submit</button>
+<div id="ubiSec" class="section">
+<h2>UBI</h2>
+<p>Universal Basic Income distribution module ready.</p>
 </div>
+
+<div id="supportSec" class="section">
+<h2>Customer Support</h2>
+<input placeholder="Email">
+<input placeholder="Message">
+<button class="action">Submit</button>
+</div>
+
 </div>
 
 <footer>

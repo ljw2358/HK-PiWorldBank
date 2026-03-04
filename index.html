@@ -1,86 +1,72 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PiWorldBank | Ultimate Edition</title>
+<title>PiWorldBank | Open Mainnet</title>
+
+<!-- Pi SDK -->
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;}
 body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
 background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
 color:white;
-min-height:100vh;
 }
 header{
 display:flex;
 justify-content:space-between;
-align-items:center;
-padding:18px;
+padding:15px;
 background:rgba(0,0,0,0.4);
-backdrop-filter:blur(10px);
 }
-.logo{font-weight:bold;font-size:20px;}
 select{
-padding:8px 12px;
-border-radius:10px;
-border:none;
-background:#1e2f38;
-color:white;
-}
-.hero{text-align:center;padding:40px 20px;}
-.hero h1{font-size:30px;margin-bottom:10px;}
-.dex-banner{
-margin:20px;
-padding:18px;
-border-radius:15px;
-background:linear-gradient(90deg,#ff8c00,#ff3c00);
-text-align:center;
-font-weight:bold;
+padding:5px;
+border-radius:5px;
 }
 .nav{
 display:grid;
-grid-template-columns:repeat(6,1fr);
-gap:10px;
-padding:20px;
+grid-template-columns:repeat(4,1fr);
+gap:8px;
+padding:10px;
 }
 .nav button{
-padding:14px 6px;
-border-radius:30px;
+padding:10px;
 border:none;
-background:rgba(255,255,255,0.1);
+border-radius:20px;
+background:rgba(255,255,255,0.15);
 color:white;
 cursor:pointer;
-transition:0.3s;
 }
-.nav button:hover{
-background:rgba(255,255,255,0.25);
-transform:translateY(-2px);
-}
-.card,.section{
-margin:25px 20px;
-padding:30px;
+.section{
+display:none;
+padding:20px;
+margin:10px;
+background:rgba(255,255,255,0.1);
 border-radius:20px;
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(12px);
 }
-.balance-amount{font-size:50px;font-weight:bold;}
+.active{display:block;}
 input{
-padding:10px;
+width:100%;
+padding:8px;
+margin:5px 0;
 border-radius:8px;
 border:none;
-margin:5px 0;
-width:100%;
 }
-button.action{
-margin-top:10px;
+.action{
+width:100%;
 padding:10px;
 border:none;
 border-radius:10px;
 background:#00c6ff;
-color:black;
 font-weight:bold;
 cursor:pointer;
+}
+.balance{
+font-size:32px;
+font-weight:bold;
+margin-top:10px;
 }
 table{
 width:100%;
@@ -88,18 +74,9 @@ margin-top:10px;
 border-collapse:collapse;
 }
 td,th{
-padding:8px;
+padding:5px;
 border-bottom:1px solid rgba(255,255,255,0.2);
-font-size:14px;
-}
-footer{
-text-align:center;
-padding:40px 15px;
-opacity:0.6;
-}
-.hidden{display:none;}
-@media(max-width:700px){
-.nav{grid-template-columns:repeat(3,1fr);}
+font-size:13px;
 }
 </style>
 </head>
@@ -107,114 +84,166 @@ opacity:0.6;
 <body>
 
 <header>
-<div class="logo">🌍 PiWorldBank</div>
-<select id="language">
-<option>한국어</option>
-<option>English</option>
-</select>
+<div>🌍 PiWorldBank</div>
+<select onchange="changeLanguage(this.value)" id="langSelect"></select>
 </header>
 
-<div class="hero">
-<h1>Web3 Digital Bank & DEX Ecosystem</h1>
-<p>Liquidity · DEX · UBI · Global Expansion</p>
-</div>
-
-<div class="dex-banner">
-🚀 3월 12일 자체 DEX 거래소 런칭
-</div>
-
 <div class="nav">
-<button>결제</button>
-<button>송금</button>
-<button>예치</button>
-<button>리워드</button>
-<button>UBI</button>
-<button onclick="adminLogin()">관리자</button>
+<button onclick="showSection('dashboard')" data-i18n="dashboard"></button>
+<button onclick="showSection('pay')" data-i18n="pay"></button>
+<button onclick="showSection('send')" data-i18n="send"></button>
+<button onclick="showSection('lp')" data-i18n="lp"></button>
+<button onclick="showSection('dex')" data-i18n="dex"></button>
+<button onclick="showSection('ubi')" data-i18n="ubi"></button>
+<button onclick="showSection('reward')" data-i18n="reward"></button>
+<button onclick="connectPi()" data-i18n="connect"></button>
 </div>
 
-<div class="card">
-<div>총 잔액</div>
-<div class="balance-amount" id="balance">400 Pi</div>
-</div>
-
-<div class="section">
-<h3>DEX 스왑 시뮬레이터</h3>
-<input type="number" id="swapAmount" placeholder="Pi 입력">
-<button class="action" onclick="simulateSwap()">USDT로 스왑</button>
-<div id="swapResult"></div>
-</div>
-
-<div class="section">
-<h3>유동성 풀 APR 계산기</h3>
-<input type="number" id="lpAmount" placeholder="예치 Pi 수량">
-<input type="number" id="apr" placeholder="예상 APR (%)">
-<button class="action" onclick="calculateAPR()">수익 계산</button>
-<div id="aprResult"></div>
-</div>
-
-<div class="section">
-<h3>거래 내역</h3>
+<div id="dashboard" class="section active">
+<h3 data-i18n="totalBalance"></h3>
+<div class="balance" id="balance">0 Pi</div>
 <table>
 <thead>
-<tr><th>타입</th><th>수량</th><th>시간</th></tr>
+<tr>
+<th data-i18n="type"></th>
+<th data-i18n="amount"></th>
+<th data-i18n="time"></th>
+</tr>
 </thead>
 <tbody id="txTable"></tbody>
 </table>
 </div>
 
-<div class="section hidden" id="adminPanel">
-<h3>관리자 모드</h3>
-<button class="action" onclick="mint()">+100 Pi 민트</button>
+<div id="pay" class="section">
+<h3 data-i18n="pay"></h3>
+<input type="number" id="payAmount">
+<button class="action" onclick="pay()" data-i18n="execute"></button>
 </div>
 
-<footer>
-Contact: info@hkglobal.com<br>
-© 2026 PiWorldBank Ultimate Edition
-</footer>
+<div id="send" class="section">
+<h3 data-i18n="send"></h3>
+<input type="text" placeholder="Wallet">
+<input type="number" id="sendAmount">
+<button class="action" onclick="send()" data-i18n="execute"></button>
+</div>
+
+<div id="lp" class="section">
+<h3 data-i18n="lp"></h3>
+<input type="number" id="lpAmount">
+<button class="action" onclick="depositLP()" data-i18n="execute"></button>
+<div id="lpInfo"></div>
+</div>
+
+<div id="dex" class="section">
+<h3 data-i18n="dex"></h3>
+<input type="number" id="swapAmount">
+<button class="action" onclick="swap()" data-i18n="execute"></button>
+<div id="swapResult"></div>
+</div>
+
+<div id="ubi" class="section">
+<button class="action" onclick="claimUBI()">UBI 10 Pi</button>
+</div>
+
+<div id="reward" class="section">
+<button class="action" onclick="reward()">Reward 5 Pi</button>
+</div>
 
 <script>
-let balance=400;
+let balance=300;
+let currentLang="en";
 
-function simulateSwap(){
-let amount=parseFloat(document.getElementById("swapAmount").value);
-if(!amount || amount<=0) return;
-let rate=35; 
-let result=amount*rate;
-document.getElementById("swapResult").innerHTML=
-amount+" Pi → "+result.toFixed(2)+" USDT (시뮬레이션)";
-addTx("SWAP",amount);
+const translations={
+en:{dashboard:"Dashboard",pay:"Pay",send:"Send",lp:"Liquidity",dex:"DEX",ubi:"UBI",reward:"Reward",connect:"Connect Pi",totalBalance:"Total Balance",type:"Type",amount:"Amount",time:"Time",execute:"Execute"},
+ko:{dashboard:"대시보드",pay:"결제",send:"송금",lp:"예치",dex:"DEX",ubi:"UBI",reward:"리워드",connect:"Pi 연결",totalBalance:"총 잔액",type:"타입",amount:"수량",time:"시간",execute:"실행"},
+ja:{dashboard:"ダッシュボード",pay:"支払い",send:"送金",lp:"流動性",dex:"DEX",ubi:"UBI",reward:"報酬",connect:"Pi接続",totalBalance:"総残高",type:"タイプ",amount:"数量",time:"時間",execute:"実行"},
+zh:{dashboard:"仪表板",pay:"支付",send:"发送",lp:"流动性",dex:"DEX",ubi:"UBI",reward:"奖励",connect:"连接Pi",totalBalance:"总余额",type:"类型",amount:"数量",time:"时间",execute:"执行"},
+es:{dashboard:"Panel",pay:"Pagar",send:"Enviar",lp:"Liquidez",dex:"DEX",ubi:"UBI",reward:"Recompensa",connect:"Conectar Pi",totalBalance:"Saldo Total",type:"Tipo",amount:"Cantidad",time:"Hora",execute:"Ejecutar"},
+fr:{dashboard:"Tableau",pay:"Payer",send:"Envoyer",lp:"Liquidité",dex:"DEX",ubi:"UBI",reward:"Récompense",connect:"Connecter Pi",totalBalance:"Solde Total",type:"Type",amount:"Montant",time:"Heure",execute:"Exécuter"},
+de:{dashboard:"Dashboard",pay:"Bezahlen",send:"Senden",lp:"Liquidität",dex:"DEX",ubi:"UBI",reward:"Belohnung",connect:"Pi Verbinden",totalBalance:"Gesamtguthaben",type:"Typ",amount:"Betrag",time:"Zeit",execute:"Ausführen"},
+ru:{dashboard:"Панель",pay:"Оплата",send:"Отправить",lp:"Ликвидность",dex:"DEX",ubi:"UBI",reward:"Награда",connect:"Подключить Pi",totalBalance:"Общий баланс",type:"Тип",amount:"Сумма",time:"Время",execute:"Выполнить"}
+};
+
+function initLanguage(){
+let userLang=navigator.language.slice(0,2);
+if(!translations[userLang]) userLang="en";
+changeLanguage(userLang);
+let select=document.getElementById("langSelect");
+for(let lang in translations){
+let opt=document.createElement("option");
+opt.value=lang;
+opt.text=lang.toUpperCase();
+select.appendChild(opt);
+}
+select.value=userLang;
 }
 
-function calculateAPR(){
-let amount=parseFloat(document.getElementById("lpAmount").value);
-let apr=parseFloat(document.getElementById("apr").value);
-if(!amount||!apr)return;
-let yearly=amount*(apr/100);
-document.getElementById("aprResult").innerHTML=
-"예상 연 수익: "+yearly.toFixed(2)+" Pi";
+function changeLanguage(lang){
+currentLang=lang;
+document.querySelectorAll("[data-i18n]").forEach(el=>{
+el.innerText=translations[lang][el.dataset.i18n];
+});
+}
+
+function updateBalance(){
+document.getElementById("balance").innerText=balance+" Pi";
+}
+
+function showSection(id){
+document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
 }
 
 function addTx(type,amount){
-let table=document.getElementById("txTable");
-let row=table.insertRow(0);
+let row=document.getElementById("txTable").insertRow(0);
 row.insertCell(0).innerText=type;
-row.insertCell(1).innerText=amount+" Pi";
+row.insertCell(1).innerText=amount;
 row.insertCell(2).innerText=new Date().toLocaleTimeString();
 }
 
-function adminLogin(){
-let pass=prompt("관리자 비밀번호 입력");
-if(pass==="1234"){
-document.getElementById("adminPanel").classList.remove("hidden");
+function pay(){
+let a=parseFloat(document.getElementById("payAmount").value);
+if(a>0 && a<=balance){balance-=a;updateBalance();addTx("PAY",-a);}
+}
+
+function send(){
+let a=parseFloat(document.getElementById("sendAmount").value);
+if(a>0 && a<=balance){balance-=a;updateBalance();addTx("SEND",-a);}
+}
+
+function depositLP(){
+let a=parseFloat(document.getElementById("lpAmount").value);
+if(a>0 && a<=balance){balance-=a;updateBalance();addTx("LP",-a);}
+}
+
+function swap(){
+let a=parseFloat(document.getElementById("swapAmount").value);
+if(a>0 && a<=balance){
+balance-=a;
+updateBalance();
+addTx("SWAP",-a);
+document.getElementById("swapResult").innerText=a*35+" USDT";
 }
 }
 
-function mint(){
-balance+=100;
-document.getElementById("balance").innerText=balance+" Pi";
-addTx("MINT",100);
+function claimUBI(){balance+=10;updateBalance();addTx("UBI",10);}
+function reward(){balance+=5;updateBalance();addTx("REWARD",5);}
+
+function connectPi(){
+if(window.Pi){
+Pi.init({version:"2.0"});
+Pi.authenticate(["payments"],function(auth){
+alert("Connected as "+auth.user.username);
+});
+}else{
+alert("Pi SDK not detected (Sandbox mode)");
 }
+}
+
+initLanguage();
+updateBalance();
 </script>
 
 </body>
 </html>
+ 

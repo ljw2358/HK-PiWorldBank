@@ -3,68 +3,80 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PiWorldBank</title>
+<title>PiWorldBank | Open Mainnet</title>
+
+<!-- Pi SDK -->
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
 
 <style>
 body{
 margin:0;
-font-family:Arial, sans-serif;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
 background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
 color:white;
-text-align:center;
 }
-
 header{
 display:flex;
 justify-content:space-between;
-align-items:center;
-padding:15px 20px;
-background:rgba(0,0,0,0.3);
+padding:15px;
+background:rgba(0,0,0,0.4);
 }
-
 select{
 padding:5px;
-border-radius:6px;
+border-radius:5px;
 }
-
-.container{
-padding:30px;
-}
-
-.grid{
+.nav{
 display:grid;
-grid-template-columns:repeat(6,1fr);
-gap:15px;
-margin-top:30px;
+grid-template-columns:repeat(4,1fr);
+gap:8px;
+padding:10px;
 }
-
-button{
-padding:20px;
+.nav button{
+padding:10px;
 border:none;
-border-radius:15px;
-background:#ffd700;
-font-weight:bold;
+border-radius:20px;
+background:rgba(255,255,255,0.15);
+color:white;
 cursor:pointer;
-transition:0.3s;
 }
-
-button:hover{
-transform:scale(1.05);
-}
-
 .section{
 display:none;
-margin-top:30px;
 padding:20px;
+margin:10px;
 background:rgba(255,255,255,0.1);
-border-radius:15px;
+border-radius:20px;
 }
-
+.active{display:block;}
 input{
+width:100%;
 padding:8px;
-margin:5px;
+margin:5px 0;
 border-radius:8px;
 border:none;
+}
+.action{
+width:100%;
+padding:10px;
+border:none;
+border-radius:10px;
+background:#00c6ff;
+font-weight:bold;
+cursor:pointer;
+}
+.balance{
+font-size:32px;
+font-weight:bold;
+margin-top:10px;
+}
+table{
+width:100%;
+margin-top:10px;
+border-collapse:collapse;
+}
+td,th{
+padding:5px;
+border-bottom:1px solid rgba(255,255,255,0.2);
+font-size:13px;
 }
 </style>
 </head>
@@ -72,211 +84,164 @@ border:none;
 <body>
 
 <header>
-<h2>🌍 PiWorldBank</h2>
-<select id="languageSelect" onchange="changeLanguage()"></select>
+<div>🌍 PiWorldBank</div>
+<select onchange="changeLanguage(this.value)" id="langSelect"></select>
 </header>
 
-<div class="container">
-
-<h1 id="welcomeText">Welcome to PiWorldBank</h1>
-
-<div class="grid">
-<button onclick="showSection('pay')">결재</button>
-<button onclick="showSection('send')">송금</button>
-<button onclick="showSection('deposit')">예치</button>
-<button onclick="showSection('reward')">리워드</button>
-<button onclick="showSection('ubi')">UBI</button>
-<button onclick="showSection('support')">고객센터</button>
+<div class="nav">
+<button onclick="showSection('dashboard')" data-i18n="dashboard"></button>
+<button onclick="showSection('pay')" data-i18n="pay"></button>
+<button onclick="showSection('send')" data-i18n="send"></button>
+<button onclick="showSection('lp')" data-i18n="lp"></button>
+<button onclick="showSection('dex')" data-i18n="dex"></button>
+<button onclick="showSection('ubi')" data-i18n="ubi"></button>
+<button onclick="showSection('reward')" data-i18n="reward"></button>
+<button onclick="connectPi()" data-i18n="connect"></button>
 </div>
 
-<!-- 결재 -->
+<div id="dashboard" class="section active">
+<h3 data-i18n="totalBalance"></h3>
+<div class="balance" id="balance">0 Pi</div>
+<table>
+<thead>
+<tr>
+<th data-i18n="type"></th>
+<th data-i18n="amount"></th>
+<th data-i18n="time"></th>
+</tr>
+</thead>
+<tbody id="txTable"></tbody>
+</table>
+</div>
+
 <div id="pay" class="section">
-<h3>결재</h3>
-<input placeholder="상대 지갑주소">
-<input placeholder="금액">
-<button onclick="processPayment()">결재 실행</button>
+<h3 data-i18n="pay"></h3>
+<input type="number" id="payAmount">
+<button class="action" onclick="pay()" data-i18n="execute"></button>
 </div>
 
-<!-- 송금 -->
 <div id="send" class="section">
-<h3>송금</h3>
-<input placeholder="받는 주소">
-<input placeholder="금액">
-<button onclick="processTransfer()">송금 실행</button>
+<h3 data-i18n="send"></h3>
+<input type="text" placeholder="Wallet">
+<input type="number" id="sendAmount">
+<button class="action" onclick="send()" data-i18n="execute"></button>
 </div>
 
-<!-- 예치 -->
-<div id="deposit" class="section">
-<h3>예치 (Staking)</h3>
-<input placeholder="예치 수량">
-<button onclick="processDeposit()">예치 시작</button>
+<div id="lp" class="section">
+<h3 data-i18n="lp"></h3>
+<input type="number" id="lpAmount">
+<button class="action" onclick="depositLP()" data-i18n="execute"></button>
+<div id="lpInfo"></div>
 </div>
 
-<!-- 리워드 -->
-<div id="reward" class="section">
-<h3>리워드 확인</h3>
-<button onclick="checkReward()">리워드 조회</button>
-<p id="rewardResult"></p>
+<div id="dex" class="section">
+<h3 data-i18n="dex"></h3>
+<input type="number" id="swapAmount">
+<button class="action" onclick="swap()" data-i18n="execute"></button>
+<div id="swapResult"></div>
 </div>
 
-<!-- UBI -->
 <div id="ubi" class="section">
-<h3>UBI 신청</h3>
-<button onclick="applyUBI()">UBI 신청하기</button>
+<button class="action" onclick="claimUBI()">UBI 10 Pi</button>
 </div>
 
-<!-- 고객센터 -->
-<div id="support" class="section">
-<h3>고객센터</h3>
-
-<div id="userSupport">
-<input id="userMessage" placeholder="문의 내용 입력">
-<button onclick="submitTicket()">문의 제출</button>
-<p id="ticketStatus"></p>
-</div>
-
-<hr>
-
-<div id="adminLogin">
-<h4>관리자 로그인</h4>
-<input id="adminPass" type="password" placeholder="관리자 비밀번호">
-<button onclick="adminAccess()">관리자 접속</button>
-</div>
-
-<div id="adminPanel" style="display:none;">
-<h4>관리자 패널</h4>
-<button onclick="viewTickets()">문의 목록 보기</button>
-<p id="ticketList"></p>
-</div>
-
-</div>
-
+<div id="reward" class="section">
+<button class="action" onclick="reward()">Reward 5 Pi</button>
 </div>
 
 <script>
+let balance=300;
+let currentLang="en";
 
-/* ================================
-   20+ Language System
-================================ */
-const languages = {
-en:"English",ko:"한국어",zh:"中文",ja:"日本語",es:"Español",
-fr:"Français",de:"Deutsch",ar:"العربية",ru:"Русский",
-hi:"Hindi",pt:"Português",it:"Italiano",tr:"Türkçe",
-vi:"Vietnamese",th:"Thai",id:"Indonesian",
-pl:"Polski",nl:"Dutch",sv:"Swedish",uk:"Ukrainian",
-fa:"Persian"
+const translations={
+en:{dashboard:"Dashboard",pay:"Pay",send:"Send",lp:"Liquidity",dex:"DEX",ubi:"UBI",reward:"Reward",connect:"Connect Pi",totalBalance:"Total Balance",type:"Type",amount:"Amount",time:"Time",execute:"Execute"},
+ko:{dashboard:"대시보드",pay:"결제",send:"송금",lp:"예치",dex:"DEX",ubi:"UBI",reward:"리워드",connect:"Pi 연결",totalBalance:"총 잔액",type:"타입",amount:"수량",time:"시간",execute:"실행"},
+ja:{dashboard:"ダッシュボード",pay:"支払い",send:"送金",lp:"流動性",dex:"DEX",ubi:"UBI",reward:"報酬",connect:"Pi接続",totalBalance:"総残高",type:"タイプ",amount:"数量",time:"時間",execute:"実行"},
+zh:{dashboard:"仪表板",pay:"支付",send:"发送",lp:"流动性",dex:"DEX",ubi:"UBI",reward:"奖励",connect:"连接Pi",totalBalance:"总余额",type:"类型",amount:"数量",time:"时间",execute:"执行"},
+es:{dashboard:"Panel",pay:"Pagar",send:"Enviar",lp:"Liquidez",dex:"DEX",ubi:"UBI",reward:"Recompensa",connect:"Conectar Pi",totalBalance:"Saldo Total",type:"Tipo",amount:"Cantidad",time:"Hora",execute:"Ejecutar"},
+fr:{dashboard:"Tableau",pay:"Payer",send:"Envoyer",lp:"Liquidité",dex:"DEX",ubi:"UBI",reward:"Récompense",connect:"Connecter Pi",totalBalance:"Solde Total",type:"Type",amount:"Montant",time:"Heure",execute:"Exécuter"},
+de:{dashboard:"Dashboard",pay:"Bezahlen",send:"Senden",lp:"Liquidität",dex:"DEX",ubi:"UBI",reward:"Belohnung",connect:"Pi Verbinden",totalBalance:"Gesamtguthaben",type:"Typ",amount:"Betrag",time:"Zeit",execute:"Ausführen"},
+ru:{dashboard:"Панель",pay:"Оплата",send:"Отправить",lp:"Ликвидность",dex:"DEX",ubi:"UBI",reward:"Награда",connect:"Подключить Pi",totalBalance:"Общий баланс",type:"Тип",amount:"Сумма",time:"Время",execute:"Выполнить"}
 };
 
-const welcomeTexts = {
-en:"Welcome to PiWorldBank",
-ko:"파이월드뱅크에 오신 것을 환영합니다",
-zh:"欢迎来到 PiWorldBank",
-ja:"PiWorldBankへようこそ",
-es:"Bienvenido a PiWorldBank",
-fr:"Bienvenue à PiWorldBank",
-de:"Willkommen bei PiWorldBank",
-ar:"مرحبًا بكم في PiWorldBank",
-ru:"Добро пожаловать в PiWorldBank",
-hi:"PiWorldBank में आपका स्वागत है",
-pt:"Bem-vindo ao PiWorldBank",
-it:"Benvenuto su PiWorldBank",
-tr:"PiWorldBank'e Hoş Geldiniz",
-vi:"Chào mừng đến PiWorldBank",
-th:"ยินดีต้อนรับสู่ PiWorldBank",
-id:"Selamat datang di PiWorldBank",
-pl:"Witamy w PiWorldBank",
-nl:"Welkom bij PiWorldBank",
-sv:"Välkommen till PiWorldBank",
-uk:"Ласкаво просимо до PiWorldBank",
-fa:"به PiWorldBank خوش آمدید"
-};
-
-const select = document.getElementById("languageSelect");
-for(let key in languages){
+function initLanguage(){
+let userLang=navigator.language.slice(0,2);
+if(!translations[userLang]) userLang="en";
+changeLanguage(userLang);
+let select=document.getElementById("langSelect");
+for(let lang in translations){
 let opt=document.createElement("option");
-opt.value=key;
-opt.textContent=languages[key];
+opt.value=lang;
+opt.text=lang.toUpperCase();
 select.appendChild(opt);
 }
-
-function autoDetectLanguage(){
-let userLang=navigator.language.substring(0,2);
-if(languages[userLang]){
 select.value=userLang;
-changeLanguage();
-}
 }
 
-function changeLanguage(){
-let lang=select.value;
-document.getElementById("welcomeText").innerText=welcomeTexts[lang];
+function changeLanguage(lang){
+currentLang=lang;
+document.querySelectorAll("[data-i18n]").forEach(el=>{
+el.innerText=translations[lang][el.dataset.i18n];
+});
 }
 
-autoDetectLanguage();
+function updateBalance(){
+document.getElementById("balance").innerText=balance+" Pi";
+}
 
-/* ================================
-   Button Functions
-================================ */
 function showSection(id){
-document.querySelectorAll('.section').forEach(s=>s.style.display='none');
-document.getElementById(id).style.display='block';
+document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
 }
 
-function processPayment(){
-alert("결재 처리 완료 (메인넷 연결 자리)");
+function addTx(type,amount){
+let row=document.getElementById("txTable").insertRow(0);
+row.insertCell(0).innerText=type;
+row.insertCell(1).innerText=amount;
+row.insertCell(2).innerText=new Date().toLocaleTimeString();
 }
 
-function processTransfer(){
-alert("송금 처리 완료 (메인넷 연결 자리)");
+function pay(){
+let a=parseFloat(document.getElementById("payAmount").value);
+if(a>0 && a<=balance){balance-=a;updateBalance();addTx("PAY",-a);}
 }
 
-function processDeposit(){
-alert("예치 시작됨");
+function send(){
+let a=parseFloat(document.getElementById("sendAmount").value);
+if(a>0 && a<=balance){balance-=a;updateBalance();addTx("SEND",-a);}
 }
 
-function checkReward(){
-document.getElementById("rewardResult").innerText="현재 리워드: 12.5 Pi";
+function depositLP(){
+let a=parseFloat(document.getElementById("lpAmount").value);
+if(a>0 && a<=balance){balance-=a;updateBalance();addTx("LP",-a);}
 }
 
-function applyUBI(){
-alert("UBI 신청 완료");
+function swap(){
+let a=parseFloat(document.getElementById("swapAmount").value);
+if(a>0 && a<=balance){
+balance-=a;
+updateBalance();
+addTx("SWAP",-a);
+document.getElementById("swapResult").innerText=a*35+" USDT";
+}
 }
 
-/* ================================
-   Customer Support System
-================================ */
-let tickets=[];
+function claimUBI(){balance+=10;updateBalance();addTx("UBI",10);}
+function reward(){balance+=5;updateBalance();addTx("REWARD",5);}
 
-function submitTicket(){
-let msg=document.getElementById("userMessage").value;
-if(msg.trim()=="") return;
-tickets.push(msg);
-document.getElementById("ticketStatus").innerText="문의 접수 완료";
-document.getElementById("userMessage").value="";
-}
-
-function adminAccess(){
-let pass=document.getElementById("adminPass").value;
-if(pass==="314159"){
-document.getElementById("adminPanel").style.display="block";
+function connectPi(){
+if(window.Pi){
+Pi.init({version:"2.0"});
+Pi.authenticate(["payments"],function(auth){
+alert("Connected as "+auth.user.username);
+});
 }else{
-alert("비밀번호 오류");
+alert("Pi SDK not detected (Sandbox mode)");
 }
 }
 
-function viewTickets(){
-document.getElementById("ticketList").innerText=tickets.join("\n");
-}
-
-/* ================================
-   Pi SDK 연결 자리 (메인넷 대비)
-================================ */
-
-// 여기서 Pi SDK 로직 연결 가능
-// async function connectPi() {
-// await Pi.init({ version: "2.0" });
-// }
-
+initLanguage();
+updateBalance();
 </script>
 
 </body>

@@ -3,205 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PiWorldBank - Global Web3 Bank</title>
+    <title>PiWorldBank - Web3 Digital Bank</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --primary-orange: #f97316;
-            --text-white: #ffffff;
-            --text-gray: #94a3b8;
-            --btn-gray: #334155;
+            --bg-deep: #0a0f1e;
+            --card-bg: #161e31;
+            --accent-blue: #00bae3;
+            --accent-orange: #f97316;
+            --text-main: #ffffff;
+            --text-dim: #94a3b8;
         }
-
         body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-white);
-            display: flex;
-            justify-content: center;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center;
             min-height: 100vh;
         }
+        .app-container { width: 100%; max-width: 480px; padding: 20px; box-sizing: border-box; }
+        
+        /* 상단 헤더 및 메뉴 */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; margin-bottom: 20px; }
+        .logo { font-size: 1.2rem; font-weight: 800; display: flex; align-items: center; gap: 5px; }
+        .lang-selector { background: #1e293b; border: 1px solid #334155; color: white; padding: 5px 10px; border-radius: 8px; font-size: 0.8rem; }
 
-        .phone-container {
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
-            box-sizing: border-box;
-        }
+        .hero-section { text-align: center; margin-bottom: 30px; }
+        .hero-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 5px; line-height: 1.4; }
+        .hero-sub { color: var(--accent-blue); font-size: 0.9rem; margin-bottom: 20px; }
+        
+        .launch-badge { background: var(--accent-orange); color: black; font-weight: 800; padding: 10px; border-radius: 10px; font-size: 0.9rem; margin-bottom: 25px; }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
+        /* 메인 메뉴 버튼 6구 */
+        .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 30px; }
+        .menu-item { background: #334155; padding: 15px; border-radius: 12px; text-align: center; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+        .menu-item.active { border: 1px solid var(--accent-blue); color: var(--accent-blue); }
 
-        .logo {
-            font-size: 20px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        /* 잔액 카드 */
+        .balance-card { background: var(--card-bg); border-radius: 20px; padding: 25px; margin-bottom: 30px; border: 1px solid #2d3748; }
+        .balance-label { font-size: 0.9rem; color: var(--text-dim); margin-bottom: 10px; }
+        .balance-value { font-size: 2.2rem; font-weight: 800; }
+        .balance-value span { color: var(--accent-orange); }
 
-        /* 언어 선택창 디자인 개선 */
-        #langSelect {
-            background: #1e293b;
-            color: white;
-            border: 1px solid #475569;
-            padding: 8px;
-            border-radius: 8px;
-            font-size: 13px;
-            cursor: pointer;
-        }
+        /* 시뮬레이터 카드 */
+        .section-card { background: var(--card-bg); border-radius: 20px; padding: 25px; margin-bottom: 20px; }
+        .section-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; }
+        .input-box { width: 100%; padding: 16px; background: var(--bg-deep); border: 1px solid #334155; border-radius: 12px; color: white; font-size: 1rem; margin-bottom: 12px; box-sizing: border-box; }
+        .btn-action { width: 100%; padding: 16px; background: var(--accent-blue); border: none; border-radius: 12px; color: white; font-weight: 800; font-size: 1rem; cursor: pointer; }
 
-        .hero { text-align: center; margin-bottom: 30px; }
-        h1 { font-size: 24px; margin-bottom: 10px; line-height: 1.2; word-break: keep-all; }
-        .subtitle { color: var(--text-gray); font-size: 13px; margin-bottom: 25px; }
-
-        .launch-banner {
-            background-color: var(--primary-orange);
-            padding: 15px;
-            border-radius: 12px;
-            font-weight: bold;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
-        .grid-btn {
-            background-color: var(--btn-gray);
-            border: none;
-            color: white;
-            padding: 18px 5px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .grid-btn.support {
-            border: 1px solid #0891b2;
-            background-color: rgba(8, 145, 178, 0.1);
-        }
-
-        .balance-card {
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 20px;
-            border: 1px solid #334155;
-        }
-
-        .balance-label { color: var(--text-gray); font-size: 13px; margin-bottom: 8px; }
-        .balance-amount { font-size: 40px; font-weight: 800; }
-        .balance-amount span { color: var(--primary-orange); font-size: 24px; margin-left: 5px; }
+        .footer { text-align: center; color: var(--text-dim); font-size: 0.8rem; margin-top: 50px; padding-bottom: 30px; border-top: 1px solid #1e293b; padding-top: 20px; width: 100%; }
     </style>
 </head>
 <body>
 
-<div class="phone-container">
+<div class="app-container">
     <div class="header">
         <div class="logo">🌍 PiWorldBank</div>
-        <select id="langSelect" onchange="changeLanguage(this.value)">
-            <option value="ko">🇰🇷 한국어</option>
-            <option value="en" selected>🇺🇸 English</option>
-            <option value="zh">🇨🇳 中文</option>
-            <option value="ja">🇯🇵 日本語</option>
-            <option value="es">🇪🇸 Español</option>
-            <option value="fr">🇫🇷 Français</option>
-            <option value="de">DE Deutsch</option>
-            <option value="it">IT Italiano</option>
-            <option value="pt">PT Português</option>
-            <option value="ru">RU Русский</option>
-            <option value="ar">SA العربية</option>
-            <option value="hi">IN हिन्दी</option>
-            <option value="bn">BD বাংলা</option>
-            <option value="id">ID Indonesia</option>
+        <select class="lang-selector" id="langSelect" onchange="changeLanguage(this.value)">
+            <option value="ko">KR 한국어</option>
+            <option value="en">EN English</option>
+            <option value="zh">CN 中文</option>
+            <option value="ja">JP 日本語</option>
             <option value="vi">VN Tiếng Việt</option>
-            <option value="th">TH ภาษาไทย</option>
-            <option value="tr">TR Türkçe</option>
-            <option value="pl">PL Polski</option>
-            <option value="nl">NL Nederlands</option>
-            <option value="sv">SE Svenska</option>
         </select>
     </div>
 
-    <div class="hero">
-        <h1 id="mainTitle">Web3 Digital Bank & DEX Ecosystem</h1>
-        <p class="subtitle" id="subTitle">Liquidity · DEX · UBI · Global Expansion</p>
-        <div class="launch-banner" id="launchBanner">🚀 DEX Exchange Launch on March 12</div>
+    <div class="hero-section">
+        <h1 class="hero-title" id="main-title">Web3 디지털 뱅크 & DEX 생태계</h1>
+        <div class="hero-sub" id="main-sub">유동성 · DEX · UBI · 글로벌 확장</div>
+        <div class="launch-badge" id="badge-text">📢 3월 12일 DEX 거래소 출시</div>
     </div>
 
-    <div class="grid-container">
-        <button class="grid-btn" id="btnPay">Payment</button>
-        <button class="grid-btn" id="btnSend">Send</button>
-        <button class="grid-btn" id="btnStake">Stake</button>
-        <button class="grid-btn" id="btnReward">Reward</button>
-        <button class="grid-btn" id="btnUBI">UBI</button>
-        <button class="grid-btn support" id="btnSupport">Support</button>
+    <div class="menu-grid">
+        <div class="menu-item" id="m1">결제</div>
+        <div class="menu-item" id="m2">송금</div>
+        <div class="menu-item" id="m3">예치</div>
+        <div class="menu-item" id="m4">리워드</div>
+        <div class="menu-item" id="m5">기본소득</div>
+        <div class="menu-item active" id="m6">지원</div>
     </div>
 
     <div class="balance-card">
-        <div class="balance-label" id="balanceLabel">Total Balance</div>
-        <div class="balance-amount">400 <span>Pi</span></div>
+        <div class="balance-label" id="bal-label">총 잔액</div>
+        <div class="balance-value">400 <span>Pi</span></div>
+    </div>
+
+    <div class="section-card">
+        <div class="section-title" id="swap-title">DEX 스왑 시뮬레이터</div>
+        <input type="number" class="input-box" id="swap-input" placeholder="Pi 입력">
+        <button class="btn-action" id="swap-btn">USDT로 스왑</button>
+    </div>
+
+    <div class="section-card">
+        <div class="section-title" id="apr-title">유동성 풀 APR 계산기</div>
+        <input type="number" class="input-box" id="apr-stake" placeholder="예치 Pi 수량">
+        <input type="number" class="input-box" id="apr-val" placeholder="예상 APR (%)">
+        <button class="btn-action" id="apr-btn" style="background: #1e293b; border: 1px solid var(--accent-blue);">출처로 이동</button>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 PiWorldBank Ultimate Edition</p>
+        <p>Contact: <a href="mailto:info@hkpwb.com" style="color:var(--accent-blue); text-decoration:none;">info@hkpwb.com</a></p>
     </div>
 </div>
 
 <script>
-    const data = {
-        ko: { title: "Web3 디지털 뱅크 & DEX 생태계", sub: "유동성 · DEX · UBI · 글로벌 확장", launch: "🚀 3월 12일 DEX 거래소 출시", pay: "결제", send: "송금", stake: "예치", reward: "리워드", ubi: "기본소득", support: "지원", balance: "총 잔액" },
-        en: { title: "Web3 Digital Bank & DEX Ecosystem", sub: "Liquidity · DEX · UBI · Global Expansion", launch: "🚀 DEX Exchange Launch on March 12", pay: "Payment", send: "Send", stake: "Stake", reward: "Reward", ubi: "UBI", support: "Support", balance: "Total Balance" },
-        zh: { title: "Web3 数字银行和 DEX 生态系统", sub: "流动性 · DEX · UBI · 全球扩张", launch: "🚀 DEX 交易所于 3 월 12 일上线", pay: "支付", send: "转账", stake: "质押", reward: "奖励", ubi: "全民收入", support: "支持", balance: "总余额" },
-        ja: { title: "Web3 デジタルバンク & DEX エコシステム", sub: "流動性 · DEX · UBI · グローバル展開", launch: "🚀 3月12日にDEX取引所が開始", pay: "決済", send: "送金", stake: "預入", reward: "報酬", ubi: "UBI", support: "サポート", balance: "総残高" },
-        es: { title: "Ecosistema de Banco Digital Web3 y DEX", sub: "Liquidez · DEX · UBI · Expansión Global", launch: "🚀 Lanzamiento de DEX el 12 de marzo", pay: "Pago", send: "Enviar", stake: "Apostar", reward: "Recompensa", ubi: "Renta Básica", support: "Soporte", balance: "Saldo Total" },
-        fr: { title: "Écosystème de Banque Numérique Web3 & DEX", sub: "Liquidité · DEX · UBI · Expansion Mondiale", launch: "🚀 Lancement de l'échange DEX le 12 mars", pay: "Paiement", send: "Envoyer", stake: "Staking", reward: "Récompense", ubi: "RBU", support: "Support", balance: "Solde Total" },
-        de: { title: "Web3 Digitalbank & DEX Ökosystem", sub: "Liquidität · DEX · UBI · Globale Expansion", launch: "🚀 DEX-Börsenstart am 12. März", pay: "Zahlung", send: "Senden", stake: "Anlegen", reward: "Belohnung", ubi: "BGE", support: "Support", balance: "Gesamtguthaben" },
-        it: { title: "Ecosistema Bancario Digitale Web3 e DEX", sub: "Liquidità · DEX · UBI · Espansione Globale", launch: "🚀 Lancio dell'Exchange DEX il 12 marzo", pay: "Pagamento", send: "Invia", stake: "Stake", reward: "Premio", ubi: "Reddito Base", support: "Supporto", balance: "Saldo Totale" },
-        pt: { title: "Ecossistema de Banco Digital Web3 e DEX", sub: "Liquidez · DEX · UBI · Expansão Global", launch: "🚀 Lançamento da Exchange DEX em 12 de março", pay: "Pagamento", send: "Enviar", stake: "Stake", reward: "Recompensa", ubi: "RBU", support: "Suporte", balance: "Saldo Total" },
-        ru: { title: "Цифровой банк Web3 и экосистема DEX", sub: "Ликвидность · DEX · UBI · Глобальное расширение", launch: "🚀 Запуск биржи DEX 12 марта", pay: "Оплата", send: "Отправить", stake: "Стейкинг", reward: "Награда", ubi: "ББД", support: "Поддержка", balance: "Общий баланс" },
-        ar: { title: "بنك Web3 الرقمي ونظام DEX البيئي", sub: "السيولة · DEX · UBI · التوسع العالمي", launch: "🚀 إطلاق بورصة DEX في 12 مارس", pay: "دفع", send: "إرسال", stake: "رهن", reward: "مكافأة", ubi: "الدخل الأساسي", support: "الدعم", balance: "إجمالي الرصيد" },
-        hi: { title: "Web3 डिजिटल बैंक और DEX इकोसिस्टम", sub: "तरलता · DEX · UBI · वैश्विक विस्तार", launch: "🚀 12 मार्च को DEX एक्सचेंज लॉन्च", pay: "भुगतान", send: "भेजें", stake: "जमा करें", reward: "पुरस्कार", ubi: "बुनियादी आय", support: "सहायता", balance: "कुल शेष" },
-        bn: { title: "Web3 ডিজিটাল ব্যাংক এবং DEX ইকোসিস্টেম", sub: "তারল্য · DEX · UBI · বিশ্বব্যাপী সম্প্রসারণ", launch: "🚀 ১২ মার্চ DEX এক্সচেঞ্জ চালু হবে", pay: "পেমেন্ট", send: "পাঠান", stake: "স্টেক", reward: "পুরস্কার", ubi: "মৌলিক আয়", support: "সহায়তা", balance: "মোট ব্যালেন্স" },
-        id: { title: "Ekosistem Bank Digital Web3 & DEX", sub: "Likuiditas · DEX · UBI · Ekspansi Global", launch: "🚀 Peluncuran Bursa DEX pada 12 Maret", pay: "Pembayaran", send: "Kirim", stake: "Stake", reward: "Hadiah", ubi: "UBI", support: "Dukungan", balance: "Total Saldo" },
-        vi: { title: "Hệ sinh thái Ngân hàng Số Web3 & DEX", sub: "Thanh khoản · DEX · UBI · Mở rộng Toàn cầu", launch: "🚀 Ra mắt sàn giao dịch DEX vào 12/3", pay: "Thanh toán", send: "Gửi", stake: "Gửi tiết kiệm", reward: "Thưởng", ubi: "Thu nhập cơ bản", support: "Hỗ trợ", balance: "Tổng số dư" },
-        th: { title: "ระบบนิเวศธนาคารดิจิทัล Web3 & DEX", sub: "สภาพคล่อง · DEX · UBI · การขยายตัวทั่วโลก", launch: "🚀 เปิดตัวตลาด DEX วันที่ 12 มีนาคม", pay: "ชำระเงิน", send: "ส่ง", stake: "ฝาก", reward: "รางวัล", ubi: "รายได้พื้นฐาน", support: "สนับสนุน", balance: "ยอดคงเหลือทั้งหมด" },
-        tr: { title: "Web3 Dijital Banka ve DEX Ekosistemi", sub: "Likidite · DEX · UBI · Küresel Genişleme", launch: "🚀 DEX Borsası 12 Mart'ta Açılıyor", pay: "Ödeme", send: "Gönder", stake: "Stake", reward: "Ödül", ubi: "Temel Gelir", support: "Destek", balance: "Toplam Bakiye" },
-        pl: { title: "Cyfrowy Bank Web3 i Ekosystem DEX", sub: "Płynność · DEX · UBI · Globalna Ekspansja", launch: "🚀 Uruchomienie giełdy DEX 12 marca", pay: "Płatność", send: "Wyślij", stake: "Stake", reward: "Nagroda", ubi: "Dochód Podst.", support: "Wsparcie", balance: "Całkowite Saldo" },
-        nl: { title: "Web3 Digitale Bank & DEX Ecosysteem", sub: "Liquiditeit · DEX · UBI · Wereldwijde Expansie", launch: "🚀 DEX Exchange-lancering op 12 maart", pay: "Betaling", send: "Verzenden", stake: "Staken", reward: "Beloning", ubi: "Basisinkomen", support: "Support", balance: "Totaal Saldo" },
-        sv: { title: "Web3 Digital Bank & DEX Ecosystem", sub: "Likviditet · DEX · UBI · Global expansion", launch: "🚀 DEX-lansering den 12 mars", pay: "Betalning", send: "Skicka", stake: "Staka", reward: "Belöning", ubi: "Basinkomst", support: "Support", balance: "Total Balans" }
+    const i18n = {
+        ko: { title: "Web3 디지털 뱅크 & DEX 생태계", sub: "유동성 · DEX · UBI · 글로벌 확장", badge: "📢 3월 12일 DEX 거래소 출시", m1: "결제", m2: "송금", m3: "예치", m4: "리워드", m5: "기본소득", m6: "지원", bal: "총 잔액", swap_t: "DEX 스왑 시뮬레이터", swap_p: "Pi 입력", swap_b: "USDT로 스왑", apr_t: "유동성 풀 APR 계산기", apr_s: "예치 Pi 수량", apr_v: "예상 APR (%)", apr_b: "출처로 이동" },
+        en: { title: "Web3 Digital Bank & DEX Ecosystem", sub: "Liquidity · DEX · UBI · Global Expansion", badge: "📢 DEX Launch on March 12", m1: "Pay", m2: "Send", m3: "Stake", m4: "Reward", m5: "UBI", m6: "Support", bal: "Total Balance", swap_t: "DEX Swap Simulator", swap_p: "Enter Pi", swap_b: "Swap to USDT", apr_t: "LP APR Calculator", apr_s: "Staking Pi", apr_v: "Expected APR (%)", apr_b: "Go to Source" },
+        zh: { title: "Web3 数字银行 & DEX 生态系统", sub: "流动性 · DEX · UBI · 全球扩展", badge: "📢 3月12日 DEX 交易所上线", m1: "支付", m2: "转账", m3: "质押", m4: "奖励", m5: "基本收入", m6: "支持", bal: "总余额", swap_t: "DEX 交换模拟器", swap_p: "输入 Pi", swap_b: "交换为 USDT", apr_t: "流动性池收益计算器", apr_s: "质押数量", apr_v: "预期年化 (%)", apr_b: "查看来源" },
+        ja: { title: "Web3 デジタルバンク & DEX エコシステム", sub: "流動性 · DEX · UBI · グローバル展開", badge: "📢 3月12日 DEX 取引所オープン", m1: "決済", m2: "送金", m3: "預け入れ", m4: "報酬", m5: "基本所得", m6: "サポート", bal: "総残高", swap_t: "DEX スワップシミュレーター", swap_p: "Piを入力", swap_b: "USDTにスワップ", apr_t: "流動性プールAPR計算機", apr_s: "預け入れPi数", apr_v: "予想APR (%)", apr_b: "ソースへ移動" },
+        vi: { title: "Hệ sinh thái Ngân hàng số Web3 & DEX", sub: "Thanh khoản · DEX · UBI · Mở rộng toàn cầu", badge: "📢 Ra mắt sàn DEX vào ngày 12/3", m1: "Thanh toán", m2: "Gửi tiền", m3: "Stake", m4: "Thưởng", m5: "Thu nhập cơ bản", m6: "Hỗ trợ", bal: "Tổng số dư", swap_t: "Trình mô phỏng hoán đổi DEX", swap_p: "Nhập Pi", swap_b: "Hoán đổi sang USDT", apr_t: "Máy tính APR Pool thanh khoản", apr_s: "Số lượng Pi", apr_v: "APR dự kiến (%)", apr_b: "Đi đến nguồn" }
     };
 
     function changeLanguage(lang) {
-        const t = data[lang];
-        document.getElementById('mainTitle').innerText = t.title;
-        document.getElementById('subTitle').innerText = t.sub;
-        document.getElementById('launchBanner').innerText = t.launch;
-        document.getElementById('btnPay').innerText = t.pay;
-        document.getElementById('btnSend').innerText = t.send;
-        document.getElementById('btnStake').innerText = t.stake;
-        document.getElementById('btnReward').innerText = t.reward;
-        document.getElementById('btnUBI').innerText = t.ubi;
-        document.getElementById('btnSupport').innerText = t.support;
-        document.getElementById('balanceLabel').innerText = t.balance;
-        
-        // 폰트 크기 자동 조절 (언어별로 길이가 다르니까요!)
-        if (lang === 'ar' || lang === 'hi' || lang === 'bn') {
-            document.getElementById('mainTitle').style.fontSize = "20px";
-        } else {
-            document.getElementById('mainTitle').style.fontSize = "24px";
-        }
+        const data = i18n[lang] || i18n.en;
+        document.getElementById('main-title').innerText = data.title;
+        document.getElementById('main-sub').innerText = data.sub;
+        document.getElementById('badge-text').innerText = data.badge;
+        document.getElementById('m1').innerText = data.m1;
+        document.getElementById('m2').innerText = data.m2;
+        document.getElementById('m3').innerText = data.m3;
+        document.getElementById('m4').innerText = data.m4;
+        document.getElementById('m5').innerText = data.m5;
+        document.getElementById('m6').innerText = data.m6;
+        document.getElementById('bal-label').innerText = data.bal;
+        document.getElementById('swap-title').innerText = data.swap_t;
+        document.getElementById('swap-input').placeholder = data.swap_p;
+        document.getElementById('swap-btn').innerText = data.swap_b;
+        document.getElementById('apr-title').innerText = data.apr_t;
+        document.getElementById('apr-stake').placeholder = data.apr_s;
+        document.getElementById('apr-val').placeholder = data.apr_v;
+        document.getElementById('apr-btn').innerText = data.apr_b;
     }
 
-    // 처음 시작은 영어로 설정 (한국어로 하려면 'ko'로 변경)
-    window.onload = () => changeLanguage('en');
+    // 초기 실행: 브라우저 언어 감지 (20개국 대응 로직 포함 가능)
+    window.onload = () => {
+        const userLang = navigator.language.split('-')[0];
+        const langToUse = i18n[userLang] ? userLang : 'en';
+        document.getElementById('langSelect').value = langToUse;
+        changeLanguage(langToUse);
+    };
 </script>
 
 </body>

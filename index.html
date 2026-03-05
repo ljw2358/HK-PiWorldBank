@@ -3,148 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PiWorldBank - Web3 Digital Bank</title>
+    <title>PiWorldBank - Global Web3</title>
     <style>
         :root {
-            --bg-deep: #0a0f1e;
-            --card-bg: #161e31;
-            --accent-blue: #00bae3;
-            --accent-orange: #f97316;
-            --text-main: #ffffff;
-            --text-dim: #94a3b8;
+            --bg-color: #0b1426;
+            --card-bg: #1a233a;
+            --primary-orange: #f36f21;
+            --accent-blue: #00b5d8;
+            --text-white: #ffffff;
         }
+
         body {
-            background-color: var(--bg-deep);
-            color: var(--text-main);
-            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-            margin: 0; padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            font-family: 'Pretendard', sans-serif;
+            margin: 0; padding: 20px;
             display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh;
         }
-        .app-container { width: 100%; max-width: 480px; padding: 20px; box-sizing: border-box; }
-        
-        /* 상단 헤더 및 메뉴 */
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; margin-bottom: 20px; }
-        .logo { font-size: 1.2rem; font-weight: 800; display: flex; align-items: center; gap: 5px; }
-        .lang-selector { background: #1e293b; border: 1px solid #334155; color: white; padding: 5px 10px; border-radius: 8px; font-size: 0.8rem; }
 
-        .hero-section { text-align: center; margin-bottom: 30px; }
-        .hero-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 5px; line-height: 1.4; }
-        .hero-sub { color: var(--accent-blue); font-size: 0.9rem; margin-bottom: 20px; }
-        
-        .launch-badge { background: var(--accent-orange); color: black; font-weight: 800; padding: 10px; border-radius: 10px; font-size: 0.9rem; margin-bottom: 25px; }
+        /* 헤더 & 언어 선택 */
+        header {
+            width: 100%; max-width: 500px;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 30px;
+        }
+        .lang-btn {
+            background: #2d3748; color: white; border: 1px solid #4a5568;
+            padding: 8px 15px; border-radius: 8px; cursor: pointer;
+        }
 
-        /* 메인 메뉴 버튼 6구 */
-        .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 30px; }
-        .menu-item { background: #334155; padding: 15px; border-radius: 12px; text-align: center; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
-        .menu-item.active { border: 1px solid var(--accent-blue); color: var(--accent-blue); }
+        /* 20개국어 모달 레이어 */
+        #langModal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 100; justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: var(--card-bg); padding: 20px; border-radius: 20px;
+            width: 85%; max-width: 400px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+        }
+        .modal-content button {
+            background: #2d3748; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;
+        }
 
-        /* 잔액 카드 */
-        .balance-card { background: var(--card-bg); border-radius: 20px; padding: 25px; margin-bottom: 30px; border: 1px solid #2d3748; }
-        .balance-label { font-size: 0.9rem; color: var(--text-dim); margin-bottom: 10px; }
-        .balance-value { font-size: 2.2rem; font-weight: 800; }
-        .balance-value span { color: var(--accent-orange); }
+        /* 메인 UI */
+        .hero-section { text-align: center; margin-bottom: 20px; }
+        .announcement {
+            background-color: var(--primary-orange); color: black;
+            width: 100%; max-width: 400px; padding: 15px; border-radius: 12px;
+            text-align: center; font-weight: bold; margin-bottom: 25px;
+        }
 
-        /* 시뮬레이터 카드 */
-        .section-card { background: var(--card-bg); border-radius: 20px; padding: 25px; margin-bottom: 20px; }
-        .section-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; }
-        .input-box { width: 100%; padding: 16px; background: var(--bg-deep); border: 1px solid #334155; border-radius: 12px; color: white; font-size: 1rem; margin-bottom: 12px; box-sizing: border-box; }
-        .btn-action { width: 100%; padding: 16px; background: var(--accent-blue); border: none; border-radius: 12px; color: white; font-weight: 800; font-size: 1rem; cursor: pointer; }
+        /* 버튼 그리드 */
+        .menu-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+            width: 100%; max-width: 450px; margin-bottom: 30px;
+        }
+        .menu-item {
+            background-color: #2d3748; padding: 20px 5px; border-radius: 15px;
+            text-align: center; color: white; border: none; font-size: 1rem; cursor: pointer;
+        }
+        /* 고객센터 특별 강조 */
+        .cs-btn {
+            border: 2px solid var(--accent-blue);
+            background-color: rgba(0, 181, 216, 0.1);
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
 
-        .footer { text-align: center; color: var(--text-dim); font-size: 0.8rem; margin-top: 50px; padding-bottom: 30px; border-top: 1px solid #1e293b; padding-top: 20px; width: 100%; }
+        .balance-card {
+            background-color: var(--card-bg); width: 100%; max-width: 400px;
+            padding: 30px; border-radius: 24px; margin-bottom: 20px;
+        }
+        .balance-amount { font-size: 2.8rem; font-weight: bold; }
+        .balance-amount span { color: var(--primary-orange); }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div class="header">
-        <div class="logo">🌍 PiWorldBank</div>
-        <select class="lang-selector" id="langSelect" onchange="changeLanguage(this.value)">
-            <option value="ko">KR 한국어</option>
-            <option value="en">EN English</option>
-            <option value="zh">CN 中文</option>
-            <option value="ja">JP 日本語</option>
-            <option value="vi">VN Tiếng Việt</option>
-        </select>
+    <header>
+        <div style="font-size: 1.4rem; font-weight: bold;">🌍 PiWorldBank</div>
+        <button class="lang-btn" onclick="toggleLang()">🌐 언어 선택 (20개국)</button>
+    </header>
+
+    <div id="langModal" onclick="toggleLang()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button onclick="changeLang('한국어')">🇰🇷 한국어</button>
+            <button onclick="changeLang('English')">🇺🇸 English</button>
+            <button onclick="changeLang('日本語')">🇯🇵 日本語</button>
+            <button onclick="changeLang('中文')">🇨🇳 中文</button>
+            <button onclick="changeLang('Tiếng Việt')">🇻🇳 Tiếng Việt</button>
+            <button onclick="changeLang('Deutsch')">🇩🇪 Deutsch</button>
+            <button onclick="changeLang('Français')">🇫🇷 Français</button>
+            <button onclick="changeLang('Español')">🇪🇸 Español</button>
+            <button onclick="changeLang('Português')">🇵🇹 Português</button>
+            <button onclick="changeLang('Русский')">🇷🇺 Русский</button>
+            <button onclick="changeLang('हिन्दी')">🇮🇳 हिन्दी</button>
+            <button onclick="changeLang('العربية')">🇸🇦 العربية</button>
+            <button onclick="changeLang('Bahasa Indonesia')">🇮🇩 Indonesia</button>
+            <button onclick="changeLang('Türkçe')">🇹🇷 Türkçe</button>
+            <button onclick="changeLang('Italiano')">🇮🇹 Italiano</button>
+            <button onclick="changeLang('ไทย')">🇹🇭 ไทย</button>
+            <button onclick="changeLang('Polski')">🇵🇱 Polski</button>
+            <button onclick="changeLang('Nederlands')">🇳🇱 Nederlands</button>
+            <button onclick="changeLang('Svenska')">🇸🇪 Svenska</button>
+            <button onclick="changeLang('Tagalog')">🇵🇭 Tagalog</button>
+        </div>
     </div>
 
     <div class="hero-section">
-        <h1 class="hero-title" id="main-title">Web3 디지털 뱅크 & DEX 생태계</h1>
-        <div class="hero-sub" id="main-sub">유동성 · DEX · UBI · 글로벌 확장</div>
-        <div class="launch-badge" id="badge-text">📢 3월 12일 DEX 거래소 출시</div>
+        <h1 id="mainTitle">Web3 디지털 뱅크 & DEX 생태계</h1>
+        <p style="color: #63b3ed;">유동성 · DEX · UBI · 글로벌 확장</p>
+    </div>
+
+    <div class="announcement">
+        📢 3월 12일 DEX 거래소 출시
     </div>
 
     <div class="menu-grid">
-        <div class="menu-item" id="m1">결제</div>
-        <div class="menu-item" id="m2">송금</div>
-        <div class="menu-item" id="m3">예치</div>
-        <div class="menu-item" id="m4">리워드</div>
-        <div class="menu-item" id="m5">기본소득</div>
-        <div class="menu-item active" id="m6">지원</div>
+        <button class="menu-item">결제</button>
+        <button class="menu-item">송금</button>
+        <button class="menu-item">예치</button>
+        <button class="menu-item">리워드</button>
+        <button class="menu-item">기본소득</button>
+        <button class="menu-item cs-btn">고객센터</button>
     </div>
 
     <div class="balance-card">
-        <div class="balance-label" id="bal-label">총 잔액</div>
-        <div class="balance-value">400 <span>Pi</span></div>
+        <div style="color: #a0aec0; margin-bottom: 10px;">총 잔액</div>
+        <div class="balance-amount">400 <span>Pi</span></div>
     </div>
 
-    <div class="section-card">
-        <div class="section-title" id="swap-title">DEX 스왑 시뮬레이터</div>
-        <input type="number" class="input-box" id="swap-input" placeholder="Pi 입력">
-        <button class="btn-action" id="swap-btn">USDT로 스왑</button>
-    </div>
-
-    <div class="section-card">
-        <div class="section-title" id="apr-title">유동성 풀 APR 계산기</div>
-        <input type="number" class="input-box" id="apr-stake" placeholder="예치 Pi 수량">
-        <input type="number" class="input-box" id="apr-val" placeholder="예상 APR (%)">
-        <button class="btn-action" id="apr-btn" style="background: #1e293b; border: 1px solid var(--accent-blue);">출처로 이동</button>
-    </div>
-
-    <div class="footer">
-        <p>© 2026 PiWorldBank Ultimate Edition</p>
-        <p>Contact: <a href="mailto:info@hkpwb.com" style="color:var(--accent-blue); text-decoration:none;">info@hkpwb.com</a></p>
-    </div>
-</div>
-
-<script>
-    const i18n = {
-        ko: { title: "Web3 디지털 뱅크 & DEX 생태계", sub: "유동성 · DEX · UBI · 글로벌 확장", badge: "📢 3월 12일 DEX 거래소 출시", m1: "결제", m2: "송금", m3: "예치", m4: "리워드", m5: "기본소득", m6: "지원", bal: "총 잔액", swap_t: "DEX 스왑 시뮬레이터", swap_p: "Pi 입력", swap_b: "USDT로 스왑", apr_t: "유동성 풀 APR 계산기", apr_s: "예치 Pi 수량", apr_v: "예상 APR (%)", apr_b: "출처로 이동" },
-        en: { title: "Web3 Digital Bank & DEX Ecosystem", sub: "Liquidity · DEX · UBI · Global Expansion", badge: "📢 DEX Launch on March 12", m1: "Pay", m2: "Send", m3: "Stake", m4: "Reward", m5: "UBI", m6: "Support", bal: "Total Balance", swap_t: "DEX Swap Simulator", swap_p: "Enter Pi", swap_b: "Swap to USDT", apr_t: "LP APR Calculator", apr_s: "Staking Pi", apr_v: "Expected APR (%)", apr_b: "Go to Source" },
-        zh: { title: "Web3 数字银行 & DEX 生态系统", sub: "流动性 · DEX · UBI · 全球扩展", badge: "📢 3月12日 DEX 交易所上线", m1: "支付", m2: "转账", m3: "质押", m4: "奖励", m5: "基本收入", m6: "支持", bal: "总余额", swap_t: "DEX 交换模拟器", swap_p: "输入 Pi", swap_b: "交换为 USDT", apr_t: "流动性池收益计算器", apr_s: "质押数量", apr_v: "预期年化 (%)", apr_b: "查看来源" },
-        ja: { title: "Web3 デジタルバンク & DEX エコシステム", sub: "流動性 · DEX · UBI · グローバル展開", badge: "📢 3月12日 DEX 取引所オープン", m1: "決済", m2: "送金", m3: "預け入れ", m4: "報酬", m5: "基本所得", m6: "サポート", bal: "総残高", swap_t: "DEX スワップシミュレーター", swap_p: "Piを入力", swap_b: "USDTにスワップ", apr_t: "流動性プールAPR計算機", apr_s: "預け入れPi数", apr_v: "予想APR (%)", apr_b: "ソースへ移動" },
-        vi: { title: "Hệ sinh thái Ngân hàng số Web3 & DEX", sub: "Thanh khoản · DEX · UBI · Mở rộng toàn cầu", badge: "📢 Ra mắt sàn DEX vào ngày 12/3", m1: "Thanh toán", m2: "Gửi tiền", m3: "Stake", m4: "Thưởng", m5: "Thu nhập cơ bản", m6: "Hỗ trợ", bal: "Tổng số dư", swap_t: "Trình mô phỏng hoán đổi DEX", swap_p: "Nhập Pi", swap_b: "Hoán đổi sang USDT", apr_t: "Máy tính APR Pool thanh khoản", apr_s: "Số lượng Pi", apr_v: "APR dự kiến (%)", apr_b: "Đi đến nguồn" }
-    };
-
-    function changeLanguage(lang) {
-        const data = i18n[lang] || i18n.en;
-        document.getElementById('main-title').innerText = data.title;
-        document.getElementById('main-sub').innerText = data.sub;
-        document.getElementById('badge-text').innerText = data.badge;
-        document.getElementById('m1').innerText = data.m1;
-        document.getElementById('m2').innerText = data.m2;
-        document.getElementById('m3').innerText = data.m3;
-        document.getElementById('m4').innerText = data.m4;
-        document.getElementById('m5').innerText = data.m5;
-        document.getElementById('m6').innerText = data.m6;
-        document.getElementById('bal-label').innerText = data.bal;
-        document.getElementById('swap-title').innerText = data.swap_t;
-        document.getElementById('swap-input').placeholder = data.swap_p;
-        document.getElementById('swap-btn').innerText = data.swap_b;
-        document.getElementById('apr-title').innerText = data.apr_t;
-        document.getElementById('apr-stake').placeholder = data.apr_s;
-        document.getElementById('apr-val').placeholder = data.apr_v;
-        document.getElementById('apr-btn').innerText = data.apr_b;
-    }
-
-    // 초기 실행: 브라우저 언어 감지 (20개국 대응 로직 포함 가능)
-    window.onload = () => {
-        const userLang = navigator.language.split('-')[0];
-        const langToUse = i18n[userLang] ? userLang : 'en';
-        document.getElementById('langSelect').value = langToUse;
-        changeLanguage(langToUse);
-    };
-</script>
-
+    <script>
+        function toggleLang() {
+            const modal = document.getElementById('langModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+        function changeLang(lang) {
+            alert(lang + "으로 언어가 설정되었습니다.");
+            toggleLang();
+        }
+    </script>
 </body>
 </html>

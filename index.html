@@ -3,134 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PiWorldBank Ultimate Edition</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>PiWorldBank - Global Web3 Bank</title>
     <style>
-        body { background-color: #0f172a; color: white; font-family: 'Inter', sans-serif; }
-        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; }
-        .gradient-btn { background: linear-gradient(135deg, #f97316 0%, #ed8936 100%); transition: all 0.3s; }
-        .action-btn { background: #334155; border-radius: 12px; padding: 15px 5px; font-size: 15px; transition: 0.2s; }
-        .action-btn:hover { background: #475569; transform: translateY(-2px); }
-        .cyan-btn { background: #22d3ee; color: #0f172a; font-weight: bold; }
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --primary-orange: #f97316;
+            --text-white: #ffffff;
+            --text-gray: #94a3b8;
+            --btn-gray: #334155;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 언어 선택창 디자인 개선 */
+        #langSelect {
+            background: #1e293b;
+            color: white;
+            border: 1px solid #475569;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .hero { text-align: center; margin-bottom: 30px; }
+        h1 { font-size: 24px; margin-bottom: 10px; line-height: 1.2; word-break: keep-all; }
+        .subtitle { color: var(--text-gray); font-size: 13px; margin-bottom: 25px; }
+
+        .launch-banner {
+            background-color: var(--primary-orange);
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .grid-btn {
+            background-color: var(--btn-gray);
+            border: none;
+            color: white;
+            padding: 18px 5px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .grid-btn.support {
+            border: 1px solid #0891b2;
+            background-color: rgba(8, 145, 178, 0.1);
+        }
+
+        .balance-card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid #334155;
+        }
+
+        .balance-label { color: var(--text-gray); font-size: 13px; margin-bottom: 8px; }
+        .balance-amount { font-size: 40px; font-weight: 800; }
+        .balance-amount span { color: var(--primary-orange); font-size: 24px; margin-left: 5px; }
     </style>
 </head>
-<body class="p-4 max-w-md mx-auto">
+<body>
 
-    <div class="flex justify-between items-center mb-6">
-        <div class="flex items-center gap-2">
-            <span class="text-2xl">🌍</span>
-            <h1 class="text-xl font-bold italic">PiWorldBank</h1>
-        </div>
-        <select id="langSelect" onchange="changeLanguage()" class="bg-slate-800 text-white border border-slate-600 rounded px-2 py-1 text-sm">
-            <option value="ko">한국어</option>
-            <option value="en">English</option>
-            <option value="uk">Українська</option> <option value="ja">日本語</option>
-            <option value="zh">中文</option>
-            <option value="es">Español</option>
-            <option value="fr">Français</option>
-            <option value="de">Deutsch</option>
-            <option value="vi">Tiếng Việt</option>
-            <option value="th">ไทย</option>
-            <option value="id">Bahasa Indonesia</option>
-            <option value="pt">Português</option>
-            <option value="ru">Русский</option>
-            <option value="ar">العربية</option>
-            <option value="hi">हिन्दी</option>
-            <option value="it">Italiano</option>
-            <option value="tr">Türkçe</option>
-            <option value="nl">Nederlands</option>
-            <option value="pl">Polski</option>
-            <option value="sv">Svenska</option>
+<div class="phone-container">
+    <div class="header">
+        <div class="logo">🌍 PiWorldBank</div>
+        <select id="langSelect" onchange="changeLanguage(this.value)">
+            <option value="ko">🇰🇷 한국어</option>
+            <option value="en" selected>🇺🇸 English</option>
+            <option value="zh">🇨🇳 中文</option>
+            <option value="ja">🇯🇵 日本語</option>
+            <option value="es">🇪🇸 Español</option>
+            <option value="fr">🇫🇷 Français</option>
+            <option value="de">DE Deutsch</option>
+            <option value="it">IT Italiano</option>
+            <option value="pt">PT Português</option>
+            <option value="ru">RU Русский</option>
+            <option value="ar">SA العربية</option>
+            <option value="hi">IN हिन्दी</option>
+            <option value="bn">BD বাংলা</option>
+            <option value="id">ID Indonesia</option>
+            <option value="vi">VN Tiếng Việt</option>
+            <option value="th">TH ภาษาไทย</option>
+            <option value="tr">TR Türkçe</option>
+            <option value="pl">PL Polski</option>
+            <option value="nl">NL Nederlands</option>
+            <option value="sv">SE Svenska</option>
         </select>
     </div>
 
-    <div class="text-center mb-8">
-        <h2 id="mainTitle" class="text-3xl font-extrabold mb-2">Web3 Digital Bank & DEX Ecosystem</h2>
-        <p id="subTitle" class="text-slate-400 text-sm">Liquidity · DEX · UBI · Global Expansion</p>
+    <div class="hero">
+        <h1 id="mainTitle">Web3 Digital Bank & DEX Ecosystem</h1>
+        <p class="subtitle" id="subTitle">Liquidity · DEX · UBI · Global Expansion</p>
+        <div class="launch-banner" id="launchBanner">🚀 DEX Exchange Launch on March 12</div>
     </div>
 
-    <button id="launchBanner" class="gradient-btn w-full py-4 rounded-2xl font-bold mb-6 shadow-lg shadow-orange-500/20">
-        🚀 3월 12일 자체 DEX 거래소 런칭
-    </button>
-
-    <div class="grid grid-cols-3 gap-3 mb-8">
-        <button class="action-btn" onclick="alert('Payment System Ready')">결제</button>
-        <button class="action-btn" onclick="alert('Transfer System Ready')">송금</button>
-        <button class="action-btn" onclick="alert('Staking System Ready')">예치</button>
-        <button class="action-btn" onclick="alert('Rewards Loading...')">리워드</button>
-        <button class="action-btn" onclick="alert('UBI Dashboard')">UBI</button>
-        <button id="csBtn" class="action-btn border border-cyan-500/50" onclick="contactCS()">고객센터</button>
+    <div class="grid-container">
+        <button class="grid-btn" id="btnPay">Payment</button>
+        <button class="grid-btn" id="btnSend">Send</button>
+        <button class="grid-btn" id="btnStake">Stake</button>
+        <button class="grid-btn" id="btnReward">Reward</button>
+        <button class="grid-btn" id="btnUBI">UBI</button>
+        <button class="grid-btn support" id="btnSupport">Support</button>
     </div>
 
-    <div class="glass-card p-6 mb-6">
-        <p id="balanceLabel" class="text-slate-400 text-sm mb-1">총 잔액</p>
-        <h3 class="text-5xl font-bold tracking-tight">400 <span class="text-orange-500 text-3xl">Pi</span></h3>
+    <div class="balance-card">
+        <div class="balance-label" id="balanceLabel">Total Balance</div>
+        <div class="balance-amount">400 <span>Pi</span></div>
     </div>
+</div>
 
-    <div class="glass-card p-6 mb-6">
-        <h4 id="dexTitle" class="font-bold mb-4 text-lg">DEX 스왑 시뮬레이터</h4>
-        <input type="number" id="piInput" placeholder="Pi 입력" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 mb-3 outline-none focus:border-cyan-500">
-        <button onclick="calculateSwap()" class="cyan-btn w-full py-4 rounded-xl shadow-lg shadow-cyan-500/20 uppercase">USDT로 스왑</button>
-        <p id="swapResult" class="mt-3 text-center text-cyan-400 font-semibold"></p>
-    </div>
+<script>
+    const data = {
+        ko: { title: "Web3 디지털 뱅크 & DEX 생태계", sub: "유동성 · DEX · UBI · 글로벌 확장", launch: "🚀 3월 12일 DEX 거래소 출시", pay: "결제", send: "송금", stake: "예치", reward: "리워드", ubi: "기본소득", support: "지원", balance: "총 잔액" },
+        en: { title: "Web3 Digital Bank & DEX Ecosystem", sub: "Liquidity · DEX · UBI · Global Expansion", launch: "🚀 DEX Exchange Launch on March 12", pay: "Payment", send: "Send", stake: "Stake", reward: "Reward", ubi: "UBI", support: "Support", balance: "Total Balance" },
+        zh: { title: "Web3 数字银行和 DEX 生态系统", sub: "流动性 · DEX · UBI · 全球扩张", launch: "🚀 DEX 交易所于 3 월 12 일上线", pay: "支付", send: "转账", stake: "质押", reward: "奖励", ubi: "全民收入", support: "支持", balance: "总余额" },
+        ja: { title: "Web3 デジタルバンク & DEX エコシステム", sub: "流動性 · DEX · UBI · グローバル展開", launch: "🚀 3月12日にDEX取引所が開始", pay: "決済", send: "送金", stake: "預入", reward: "報酬", ubi: "UBI", support: "サポート", balance: "総残高" },
+        es: { title: "Ecosistema de Banco Digital Web3 y DEX", sub: "Liquidez · DEX · UBI · Expansión Global", launch: "🚀 Lanzamiento de DEX el 12 de marzo", pay: "Pago", send: "Enviar", stake: "Apostar", reward: "Recompensa", ubi: "Renta Básica", support: "Soporte", balance: "Saldo Total" },
+        fr: { title: "Écosystème de Banque Numérique Web3 & DEX", sub: "Liquidité · DEX · UBI · Expansion Mondiale", launch: "🚀 Lancement de l'échange DEX le 12 mars", pay: "Paiement", send: "Envoyer", stake: "Staking", reward: "Récompense", ubi: "RBU", support: "Support", balance: "Solde Total" },
+        de: { title: "Web3 Digitalbank & DEX Ökosystem", sub: "Liquidität · DEX · UBI · Globale Expansion", launch: "🚀 DEX-Börsenstart am 12. März", pay: "Zahlung", send: "Senden", stake: "Anlegen", reward: "Belohnung", ubi: "BGE", support: "Support", balance: "Gesamtguthaben" },
+        it: { title: "Ecosistema Bancario Digitale Web3 e DEX", sub: "Liquidità · DEX · UBI · Espansione Globale", launch: "🚀 Lancio dell'Exchange DEX il 12 marzo", pay: "Pagamento", send: "Invia", stake: "Stake", reward: "Premio", ubi: "Reddito Base", support: "Supporto", balance: "Saldo Totale" },
+        pt: { title: "Ecossistema de Banco Digital Web3 e DEX", sub: "Liquidez · DEX · UBI · Expansão Global", launch: "🚀 Lançamento da Exchange DEX em 12 de março", pay: "Pagamento", send: "Enviar", stake: "Stake", reward: "Recompensa", ubi: "RBU", support: "Suporte", balance: "Saldo Total" },
+        ru: { title: "Цифровой банк Web3 и экосистема DEX", sub: "Ликвидность · DEX · UBI · Глобальное расширение", launch: "🚀 Запуск биржи DEX 12 марта", pay: "Оплата", send: "Отправить", stake: "Стейкинг", reward: "Награда", ubi: "ББД", support: "Поддержка", balance: "Общий баланс" },
+        ar: { title: "بنك Web3 الرقمي ونظام DEX البيئي", sub: "السيولة · DEX · UBI · التوسع العالمي", launch: "🚀 إطلاق بورصة DEX في 12 مارس", pay: "دفع", send: "إرسال", stake: "رهن", reward: "مكافأة", ubi: "الدخل الأساسي", support: "الدعم", balance: "إجمالي الرصيد" },
+        hi: { title: "Web3 डिजिटल बैंक और DEX इकोसिस्टम", sub: "तरलता · DEX · UBI · वैश्विक विस्तार", launch: "🚀 12 मार्च को DEX एक्सचेंज लॉन्च", pay: "भुगतान", send: "भेजें", stake: "जमा करें", reward: "पुरस्कार", ubi: "बुनियादी आय", support: "सहायता", balance: "कुल शेष" },
+        bn: { title: "Web3 ডিজিটাল ব্যাংক এবং DEX ইকোসিস্টেম", sub: "তারল্য · DEX · UBI · বিশ্বব্যাপী সম্প্রসারণ", launch: "🚀 ১২ মার্চ DEX এক্সচেঞ্জ চালু হবে", pay: "পেমেন্ট", send: "পাঠান", stake: "স্টেক", reward: "পুরস্কার", ubi: "মৌলিক আয়", support: "সহায়তা", balance: "মোট ব্যালেন্স" },
+        id: { title: "Ekosistem Bank Digital Web3 & DEX", sub: "Likuiditas · DEX · UBI · Ekspansi Global", launch: "🚀 Peluncuran Bursa DEX pada 12 Maret", pay: "Pembayaran", send: "Kirim", stake: "Stake", reward: "Hadiah", ubi: "UBI", support: "Dukungan", balance: "Total Saldo" },
+        vi: { title: "Hệ sinh thái Ngân hàng Số Web3 & DEX", sub: "Thanh khoản · DEX · UBI · Mở rộng Toàn cầu", launch: "🚀 Ra mắt sàn giao dịch DEX vào 12/3", pay: "Thanh toán", send: "Gửi", stake: "Gửi tiết kiệm", reward: "Thưởng", ubi: "Thu nhập cơ bản", support: "Hỗ trợ", balance: "Tổng số dư" },
+        th: { title: "ระบบนิเวศธนาคารดิจิทัล Web3 & DEX", sub: "สภาพคล่อง · DEX · UBI · การขยายตัวทั่วโลก", launch: "🚀 เปิดตัวตลาด DEX วันที่ 12 มีนาคม", pay: "ชำระเงิน", send: "ส่ง", stake: "ฝาก", reward: "รางวัล", ubi: "รายได้พื้นฐาน", support: "สนับสนุน", balance: "ยอดคงเหลือทั้งหมด" },
+        tr: { title: "Web3 Dijital Banka ve DEX Ekosistemi", sub: "Likidite · DEX · UBI · Küresel Genişleme", launch: "🚀 DEX Borsası 12 Mart'ta Açılıyor", pay: "Ödeme", send: "Gönder", stake: "Stake", reward: "Ödül", ubi: "Temel Gelir", support: "Destek", balance: "Toplam Bakiye" },
+        pl: { title: "Cyfrowy Bank Web3 i Ekosystem DEX", sub: "Płynność · DEX · UBI · Globalna Ekspansja", launch: "🚀 Uruchomienie giełdy DEX 12 marca", pay: "Płatność", send: "Wyślij", stake: "Stake", reward: "Nagroda", ubi: "Dochód Podst.", support: "Wsparcie", balance: "Całkowite Saldo" },
+        nl: { title: "Web3 Digitale Bank & DEX Ecosysteem", sub: "Liquiditeit · DEX · UBI · Wereldwijde Expansie", launch: "🚀 DEX Exchange-lancering op 12 maart", pay: "Betaling", send: "Verzenden", stake: "Staken", reward: "Beloning", ubi: "Basisinkomen", support: "Support", balance: "Totaal Saldo" },
+        sv: { title: "Web3 Digital Bank & DEX Ecosystem", sub: "Likviditet · DEX · UBI · Global expansion", launch: "🚀 DEX-lansering den 12 mars", pay: "Betalning", send: "Skicka", stake: "Staka", reward: "Belöning", ubi: "Basinkomst", support: "Support", balance: "Total Balans" }
+    };
 
-    <div class="glass-card p-6 mb-10">
-        <h4 id="poolTitle" class="font-bold mb-4 text-lg text-orange-400">유동성 풀 & 스테이킹 수익 계산기</h4>
-        <input type="number" id="stakingAmount" placeholder="예치 Pi 수량" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 mb-3 outline-none">
-        <input type="number" id="aprInput" placeholder="예상 APR (%)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 mb-4 outline-none">
-        <button onclick="calculateYield()" class="cyan-btn w-full py-4 rounded-xl shadow-lg shadow-cyan-500/20">수익 계산</button>
-        <p id="yieldResult" class="mt-3 text-center text-white"></p>
-    </div>
-
-    <footer class="text-center text-slate-500 text-xs pb-10">
-        <p id="footerContact">Contact: info@hkglobal.com</p>
-        <p>© 2026 PiWorldBank Ultimate Edition</p>
-    </footer>
-
-    <script>
-        // 20개국 언어 번역 데이터
-        const translations = {
-            ko: { mainTitle: "Web3 디지털 뱅크 & DEX 생태계", subTitle: "유동성 · DEX · UBI · 글로벌 확장", launch: "🚀 3월 12일 자체 DEX 거래소 런칭", cs: "고객센터", balance: "총 잔액", dex: "DEX 스왑 시뮬레이터", pool: "유동성 풀 APR 계산기", csMsg: "고객센터에 연결 중입니다. 잠시만 기다려주세요.", swap: "USDT로 스왑" },
-            en: { mainTitle: "Web3 Digital Bank & DEX Ecosystem", subTitle: "Liquidity · DEX · UBI · Global Expansion", launch: "🚀 DEX Exchange Launch on March 12", cs: "Support", balance: "Total Balance", dex: "DEX Swap Simulator", pool: "Liquidity Pool APR Calc", csMsg: "Connecting to Customer Support. Please wait.", swap: "Swap to USDT" },
-            uk: { mainTitle: "Web3 Цифровий Банк та Екосистема DEX", subTitle: "Ліквідність · DEX · UBI · Глобальна експансія", launch: "🚀 Запуск власної біржі DEX 12 березня", cs: "Підтримка", balance: "Загальний баланс", dex: "Симулятор обміну DEX", pool: "Калькулятор APR пулу ліквідності", csMsg: "Підключення до служби підтримки. Зачекайте.", swap: "Обміняти на USDT" },
-            // ... 다른 언어들도 유사하게 확장 가능 (지면상 대표 3개 상세 기재, 나머지는 스크립트로 동작)
-        };
-
-        function changeLanguage() {
-            const lang = document.getElementById('langSelect').value;
-            const data = translations[lang] || translations['en'];
-            
-            document.getElementById('mainTitle').innerText = data.mainTitle;
-            document.getElementById('subTitle').innerText = data.subTitle;
-            document.getElementById('launchBanner').innerText = data.launch;
-            document.getElementById('csBtn').innerText = data.cs;
-            document.getElementById('balanceLabel').innerText = data.balance;
-            document.getElementById('dexTitle').innerText = data.dex;
-            document.getElementById('poolTitle').innerText = data.pool;
+    function changeLanguage(lang) {
+        const t = data[lang];
+        document.getElementById('mainTitle').innerText = t.title;
+        document.getElementById('subTitle').innerText = t.sub;
+        document.getElementById('launchBanner').innerText = t.launch;
+        document.getElementById('btnPay').innerText = t.pay;
+        document.getElementById('btnSend').innerText = t.send;
+        document.getElementById('btnStake').innerText = t.stake;
+        document.getElementById('btnReward').innerText = t.reward;
+        document.getElementById('btnUBI').innerText = t.ubi;
+        document.getElementById('btnSupport').innerText = t.support;
+        document.getElementById('balanceLabel').innerText = t.balance;
+        
+        // 폰트 크기 자동 조절 (언어별로 길이가 다르니까요!)
+        if (lang === 'ar' || lang === 'hi' || lang === 'bn') {
+            document.getElementById('mainTitle').style.fontSize = "20px";
+        } else {
+            document.getElementById('mainTitle').style.fontSize = "24px";
         }
+    }
 
-        function contactCS() {
-            const lang = document.getElementById('langSelect').value;
-            const msg = translations[lang]?.csMsg || "Connecting...";
-            alert(msg);
-        }
+    // 처음 시작은 영어로 설정 (한국어로 하려면 'ko'로 변경)
+    window.onload = () => changeLanguage('en');
+</script>
 
-        function calculateSwap() {
-            const pi = document.getElementById('piInput').value;
-            if(!pi) return alert("수량을 입력하세요!");
-            const rate = 42.5; // 예시 환율
-            const result = (pi * rate).toLocaleString();
-            document.getElementById('swapResult').innerText = `Estimated: $${result} USDT`;
-        }
-
-        function calculateYield() {
-            const amount = document.getElementById('stakingAmount').value;
-            const apr = document.getElementById('aprInput').value;
-            if(!amount || !apr) return alert("값을 모두 입력하세요!");
-            const daily = (amount * (apr/100) / 365).toFixed(4);
-            const yearly = (amount * (apr/100)).toFixed(2);
-            document.getElementById('yieldResult').innerHTML = `일일 수익: <b>${daily} Pi</b><br>연간 수익: <b>${yearly} Pi</b>`;
-        }
-    </script>
 </body>
 </html>
